@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: tom-backend
+  namespace: tom
+
+  labels:
+    app: tom-backend
+
+spec:
+  replicas: 1
+
+  strategy:
+    rollingUpdate:
+      maxSurge: "25%"
+      maxUnavailable: "25%"
+
+  selector:
+    matchLabels:
+      app: tom-backend
+
+  template:
+    metadata:
+      labels:
+        app: tom-backend
+
+    spec:
+      containers:
+      - name: tom-backend
+        image: quay.io/jberchez-redhat/tom-backend:v1.0
+        ports:
+          - name: http
+            containerPort: 8080
