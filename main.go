@@ -93,9 +93,14 @@ func main() {
 
 	log.Printf("Server listening or port %s\n", listenPort)
 
+	isServerReady = true
+
 	stopC := make(chan os.Signal)
 	signal.Notify(stopC, syscall.SIGTERM, syscall.SIGINT)
 	sig := <-stopC
+
+	// For health checks
+	isServerReady = false
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
