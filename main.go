@@ -15,6 +15,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var (
+	isServerReady bool
+)
+
 func getEnvsV1(w http.ResponseWriter, r *http.Request) {
 	envs := make(map[string]string)
 
@@ -48,6 +52,16 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "OK")
 }
 
+func startupHealthCheck(w http.ResponseWriter, r *http.Request) {
+	if isServerReady {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Listener is up and running")
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Listener is not ready")
+	}
+}
+
 func main() {
 	listenPort := os.Getenv("PORT")
 
@@ -58,7 +72,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api/v1/env", getEnvsV1).Methods("GET") // Only GET allowed
-	r.HandleFunc("/startup", healthCheck)
+	r.HandleFunc("/startup", startupHealthCheck)
 	r.HandleFunc("/liveness", healthCheck)
 	r.HandleFunc("/readiness", healthCheck)
 	r.HandleFunc("/", healthCheck)
