@@ -29,6 +29,14 @@ spec:
       containers:
       - name: tom-backend
         image: quay.io/jberchez-redhat/tom-backend:v1.0
+
+        envFrom:
+          - configMapRef:
+              name: envs
+              optional: true
+          - secretRef:
+              name: envs
+              optional: true
         
         ports:
           - name: http
