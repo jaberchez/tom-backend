@@ -1,3 +1,6 @@
+# sudo podman build --build-arg APP_VERSION=v1.3 -t quay.io/jberchez-redhat/tom-backend:v1.3 . && \
+# sudo podman push quay.io/jberchez-redhat/tom-backend:v1.3
+
 FROM golang:1.17.5 AS builder
 
 RUN mkdir /tmp/tom-backend
